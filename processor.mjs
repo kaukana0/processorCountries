@@ -48,5 +48,10 @@ function order(input, ref) {
 
 // ccode : name  (ISO 3166-1 Alpha-2 codes (uppercase))
 export function process(inputData, output) {
-    [output.countries, output.groupChanges] = order(inputData.dimension.geo.category.label, output.countryOrder)
+    // use Optional Chaining once available
+    if(inputData && inputData.dimension && inputData.dimension.geo && inputData.dimension.geo.category && inputData.dimension.geo.category.label && output.countryOrder) {
+        [output.countries, output.groupChanges] = order(inputData.dimension.geo.category.label, output.countryOrder)
+    } else {
+        console.error("processorCountries: invalid input")
+    }
 }
