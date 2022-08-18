@@ -15,6 +15,7 @@ expected:
 out=CB
 logging - "A from input dropped, it's not in reference"
 "D from reference missing in input"
+
 */
 
 function order(input, ref) {
@@ -49,8 +50,19 @@ function order(input, ref) {
 // ccode : name  (ISO 3166-1 Alpha-2 codes (uppercase))
 export function process(inputData, output) {
     // use Optional Chaining once available
-    if(inputData && inputData.dimension && inputData.dimension.geo && inputData.dimension.geo.category && inputData.dimension.geo.category.label && output.countryOrder) {
-        [output.countries, output.groupChanges] = order(inputData.dimension.geo.category.label, output.countryOrder)
+    if(inputData && inputData.dimension && inputData.dimension.geo && inputData.dimension.geo.category && inputData.dimension.geo.category.label) {
+
+        if(output.countryOrder) {
+            [output.countries, output.groupChanges] = order(inputData.dimension.geo.category.label, output.countryOrder)
+        } else {
+            console.warn("countryProcessor: country order is not defined. Oder of input data is taken and consequently, there will be no group change detection possible.")
+            output.countries = new Map()
+            output.groupChanges = []
+            for(const el in inputData.dimension.geo.category.label) {
+                output.countries.set(el, inputData.dimension.geo.category.label[el])
+            }
+        }
+
     } else {
         console.error("processorCountries: invalid input")
     }
