@@ -55,14 +55,18 @@ function _process(inputData, output) {
     // use Optional Chaining once available
     if(inputData && inputData.dimension && inputData.dimension.geo && inputData.dimension.geo.category && inputData.dimension.geo.category.label) {
 
+        if(!output.categories) {
+            output.categories = {}
+        }
+
         if(output.countryOrder) {
-            [output.countries, output.groupChanges] = order(inputData.dimension.geo.category.label, output.countryOrder)
+            [output.categories.countries, output.groupChanges] = order(inputData.dimension.geo.category.label, output.countryOrder)
         } else {
             console.warn("processorCountries: country order is not defined. Oder of input data is taken and consequently, there will be no group change detection possible.")
-            output.countries = new Map()
+            output.categories.countries = new Map()
             output.groupChanges = []
             for(const el in inputData.dimension.geo.category.label) {
-                output.countries.set(el, inputData.dimension.geo.category.label[el])
+                output.categories.countries.set(el, inputData.dimension.geo.category.label[el])
             }
         }
 
@@ -86,6 +90,7 @@ function test() {
     inputData["dimension"]["geo"]["category"]["label"] = {A:"A",B:"B",C:"C"}
 
     let output = {}
+    output["codes"] = new Map()
     output.countryOrder = ["C","B","D"]  // ref
 
     _process(inputData, output)
