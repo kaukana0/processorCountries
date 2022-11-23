@@ -62,7 +62,7 @@ function _process(inputData, output) {
         if(output.countryOrder) {
             [output.categories.countries, output.groupChanges] = order(inputData.dimension.geo.category.label, output.countryOrder)
         } else {
-            console.warn("processorCountries: country order is not defined. Oder of input data is taken and consequently, there will be no group change detection possible.")
+            console.warn("processorCountries: country order is not defined. Order of input data is taken and consequently, there will be no group change detection possible.")
             output.categories.countries = new Map()
             output.groupChanges = []
             for(const el in inputData.dimension.geo.category.label) {
